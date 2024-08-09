@@ -1,0 +1,39 @@
+/* Button Styling */
+.button {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  /* Hover State */
+  .button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Focus State */
+  .button:focus {
+    outline: 2px solid #0056b3;
+    outline-offset: 2px;
+  }
+  
+  /* Active State */
+  .button:active {
+    background-color: #004085;
+    transform: scale(0.98);
+  }
+  
+  /* Disabled State */
+  .button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+  
