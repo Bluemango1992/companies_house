@@ -124,28 +124,40 @@ const SubmitButton = styled.button`
 
 const FeedbackModal = ({ onClose, isOpen }) => {
   const [feedback, setFeedback] = useState('');
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async () => {
+    if (!feedback.trim()) {
+      setError('Feedback cannot be empty');
+      return;
+    }
+  
+    try {
+      const response = await fetch('http://localhost:3000/feedback', {  // <-- Replace with the correct backend URL
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ feedback }),
+      });
+  
+      if (response.ok) {
+        alert('Feedback submitted successfully!');
+        setFeedback('');
+        onClose();
+      } else {
+        const responseText = await response.text();
+        const message = responseText ? JSON.parse(responseText).message : 'An error occurred';
+        setError(message);
+      }
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      setError('Something went wrong. Please try again later.');
+    }
+  };
+   
 
   if (!isOpen) {
     return null;
   }
-
-  const handleFeedbackChange = (e) => {
-    setFeedback(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    if (feedback.trim()) {
-      console.log('Feedback submitted:', feedback);
-      // Here you would typically send the feedback to your backend
-      // For now, we'll just log it to the console
-      
-      // Clear the feedback and close the modal
-      setFeedback('');
-      onClose();
-    } else {
-      console.log('Feedback is empty. Please provide some feedback before submitting.');
-    }
-  };
 
   return (
     <ModalOverlay>
@@ -156,11 +168,12 @@ const FeedbackModal = ({ onClose, isOpen }) => {
         </ModalHeader>
         <ModalBody>
           <ModalText>We value your input. Please share your thoughts with us.</ModalText>
-          <Textarea 
-            placeholder="Type your feedback here..." 
+          <Textarea
+            placeholder="Type your feedback here."
             value={feedback}
-            onChange={handleFeedbackChange}
+            onChange={(e) => setFeedback(e.target.value)}
           />
+          {error && <p style={{ color: 'red' }}>{error}</p>}
         </ModalBody>
         <ModalFooter>
           <SubmitButton onClick={handleSubmit}>Submit Feedback</SubmitButton>
@@ -184,10 +197,9 @@ const FABButton = () => {
   return (
     <>
       <FabButton onClick={handleButtonClick}>
-        <ChatBubbleIcon height={28} width={28} />
+        <ChatBubbleIcon width={30} height={30} />
       </FabButton>
-  
-      <FeedbackModal onClose={closeModal} isOpen={isModalOpen} />
+      <FeedbackModal isOpen={isModalOpen} onClose={closeModal} />
     </>
   );
 };

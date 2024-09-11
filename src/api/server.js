@@ -95,6 +95,31 @@ app.get('/companies/:company_number', async (req, res) => {
   }
 });
 
+app.post('/feedback', async (req, res) => {
+    try {
+        const { feedback } = req.body;
+
+        // Ensure feedback is provided
+        if (!feedback || feedback.trim() === '') {
+            return res.status(400).json({ message: 'Feedback is required' });
+        }
+
+        // Process the feedback (e.g., save to database or send to an email)
+        // You might want to create a Feedback model if you're saving it
+        // Example:
+        // const newFeedback = new Feedback({ text: feedback });
+        // await newFeedback.save();
+
+        // Respond with success
+        return res.status(200).json({ message: 'Feedback submitted successfully' });
+
+    } catch (err) {
+        // Log the error and return a server error message
+        console.error('Error submitting feedback:', err);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 // GET route to fetch companies (as you had before)
 app.get('/companies', async (req, res) => {
   try {
