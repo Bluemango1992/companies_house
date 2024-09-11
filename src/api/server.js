@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: '../../.env' })
 
+
 const app = express();
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON request bodies
@@ -26,7 +27,6 @@ mongoose.connect(mongoUri, {
 }).catch((err) => {
   console.error('Error connecting to MongoDB:', err);
 });
-
 
 // Define a Company schema
 const companySchema = new mongoose.Schema({
@@ -100,13 +100,14 @@ app.get('/companies', async (req, res) => {
   try {
     const { northWestLat, northWestLng, southEastLat, southEastLng } = req.query;
 
-    // Convert string parameters to numbers
+    // Log the received query parameters
+    console.log('Received query params:', { northWestLat, northWestLng, southEastLat, southEastLng });
+
     const nwLat = parseFloat(northWestLat);
     const nwLng = parseFloat(northWestLng);
     const seLat = parseFloat(southEastLat);
     const seLng = parseFloat(southEastLng);
 
-    // Validate the parameters
     if (isNaN(nwLat) || isNaN(nwLng) || isNaN(seLat) || isNaN(seLng)) {
       return res.status(400).json({ message: 'Invalid coordinates provided' });
     }
@@ -124,6 +125,7 @@ app.get('/companies', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 
 // Start the server
 const PORT = process.env.PORT || 3000;

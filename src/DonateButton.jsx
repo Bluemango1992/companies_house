@@ -21,7 +21,6 @@ const Button = styled.a`
   font-weight: 800;
   box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5);
   transition: 0.3s all linear;
-  font-family: cursive;
 
   &:hover, &:active, &:focus {
     text-decoration: none;

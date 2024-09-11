@@ -5,13 +5,25 @@
   "10050043": {
     "status": "valid"
   },
+  "10058998": {
+    "status": "valid"
+  },
   "10086291": {
+    "status": "valid"
+  },
+  "10100853": {
     "status": "valid"
   },
   "10172435": {
     "status": "valid"
   },
   "10198361": {
+    "status": "valid"
+  },
+  "10201981": {
+    "status": "valid"
+  },
+  "10203557": {
     "status": "valid"
   },
   "10369765": {
@@ -29,6 +41,9 @@
   "10449580": {
     "status": "valid"
   },
+  "10479916": {
+    "status": "valid"
+  },
   "10523154": {
     "status": "valid"
   },
@@ -42,6 +57,9 @@
     "status": "valid"
   },
   "10790488": {
+    "status": "valid"
+  },
+  "10822650": {
     "status": "valid"
   },
   "10859337": {
@@ -107,10 +125,16 @@
   "11335772": {
     "status": "valid"
   },
+  "11357499": {
+    "status": "valid"
+  },
   "11357633": {
     "status": "valid"
   },
   "11393523": {
+    "status": "valid"
+  },
+  "11393712": {
     "status": "valid"
   },
   "11393721": {
@@ -122,6 +146,12 @@
   "11429456": {
     "status": "valid"
   },
+  "11506820": {
+    "status": "valid"
+  },
+  "11534385": {
+    "status": "valid"
+  },
   "11557630": {
     "status": "valid"
   },
@@ -131,7 +161,16 @@
   "11576672": {
     "status": "valid"
   },
+  "11614308": {
+    "status": "valid"
+  },
+  "11616387": {
+    "status": "valid"
+  },
   "11619267": {
+    "status": "valid"
+  },
+  "11626661": {
     "status": "valid"
   },
   "11655167": {
@@ -1104,6 +1143,381 @@
     "status": "valid"
   },
   "01264633": {
+    "status": "valid"
+  },
+  "08138559": {
+    "status": "valid"
+  },
+  "00700719": {
+    "status": "valid"
+  },
+  "08367867": {
+    "status": "valid"
+  },
+  "04609753": {
+    "status": "valid"
+  },
+  "09131866": {
+    "status": "valid"
+  },
+  "04373946": {
+    "status": "valid"
+  },
+  "02706684": {
+    "status": "valid"
+  },
+  "05487108": {
+    "status": "valid"
+  },
+  "09687687": {
+    "status": "valid"
+  },
+  "04290504": {
+    "status": "valid"
+  },
+  "08007930": {
+    "status": "valid"
+  },
+  "02666180": {
+    "status": "valid"
+  },
+  "04235180": {
+    "status": "valid"
+  },
+  "08431426": {
+    "status": "valid"
+  },
+  "01665074": {
+    "status": "valid"
+  },
+  "03878046": {
+    "status": "valid"
+  },
+  "07098669": {
+    "status": "valid"
+  },
+  "09546534": {
+    "status": "valid"
+  },
+  "08764214": {
+    "status": "valid"
+  },
+  "02752304": {
+    "status": "valid"
+  },
+  "02661044": {
+    "status": "valid"
+  },
+  "02627518": {
+    "status": "valid"
+  },
+  "09366362": {
+    "status": "valid"
+  },
+  "05476358": {
+    "status": "valid"
+  },
+  "00947644": {
+    "status": "valid"
+  },
+  "07470226": {
+    "status": "valid"
+  },
+  "02877316": {
+    "status": "valid"
+  },
+  "05599777": {
+    "status": "valid"
+  },
+  "07644383": {
+    "status": "valid"
+  },
+  "03061333": {
+    "status": "valid"
+  },
+  "00831741": {
+    "status": "valid"
+  },
+  "07277000": {
+    "status": "valid"
+  },
+  "00533653": {
+    "status": "valid"
+  },
+  "05506721": {
+    "status": "valid"
+  },
+  "05297950": {
+    "status": "valid"
+  },
+  "04197529": {
+    "status": "valid"
+  },
+  "03670240": {
+    "status": "valid"
+  },
+  "00254887": {
+    "status": "valid"
+  },
+  "04411310": {
+    "status": "valid"
+  },
+  "06156502": {
+    "status": "valid"
+  },
+  "02835083": {
+    "status": "valid"
+  },
+  "02689205": {
+    "status": "valid"
+  },
+  "04264117": {
+    "status": "valid"
+  },
+  "01734220": {
+    "status": "valid"
+  },
+  "03476579": {
+    "status": "valid"
+  },
+  "08650415": {
+    "status": "valid"
+  },
+  "06591879": {
+    "status": "valid"
+  },
+  "03143330": {
+    "status": "valid"
+  },
+  "04978533": {
+    "status": "valid"
+  },
+  "04935652": {
+    "status": "valid"
+  },
+  "04113929": {
+    "status": "valid"
+  },
+  "08835158": {
+    "status": "valid"
+  },
+  "02258628": {
+    "status": "valid"
+  },
+  "09349238": {
+    "status": "valid"
+  },
+  "08749855": {
+    "status": "valid"
+  },
+  "04514250": {
+    "status": "valid"
+  },
+  "02900999": {
+    "status": "valid"
+  },
+  "04004654": {
+    "status": "valid"
+  },
+  "04445470": {
+    "status": "valid"
+  },
+  "06738605": {
+    "status": "valid"
+  },
+  "09647430": {
+    "status": "valid"
+  },
+  "03620177": {
+    "status": "valid"
+  },
+  "07489990": {
+    "status": "valid"
+  },
+  "00873028": {
+    "status": "valid"
+  },
+  "01013726": {
+    "status": "valid"
+  },
+  "03871324": {
+    "status": "valid"
+  },
+  "00940635": {
+    "status": "valid"
+  },
+  "01480123": {
+    "status": "valid"
+  },
+  "00851051": {
+    "status": "valid"
+  },
+  "08339328": {
+    "status": "valid"
+  },
+  "06639057": {
+    "status": "valid"
+  },
+  "05180170": {
+    "status": "valid"
+  },
+  "04509138": {
+    "status": "valid"
+  },
+  "09155925": {
+    "status": "valid"
+  },
+  "00182580": {
+    "status": "valid"
+  },
+  "00216529": {
+    "status": "valid"
+  },
+  "05001590": {
+    "status": "valid"
+  },
+  "00182306": {
+    "status": "valid"
+  },
+  "09354593": {
+    "status": "valid"
+  },
+  "01537086": {
+    "status": "valid"
+  },
+  "03870587": {
+    "status": "valid"
+  },
+  "06277416": {
+    "status": "valid"
+  },
+  "08527303": {
+    "status": "valid"
+  },
+  "08572271": {
+    "status": "valid"
+  },
+  "06256696": {
+    "status": "valid"
+  },
+  "02868648": {
+    "status": "valid"
+  },
+  "01161716": {
+    "status": "valid"
+  },
+  "00282575": {
+    "status": "valid"
+  },
+  "00300721": {
+    "status": "valid"
+  },
+  "01203356": {
+    "status": "valid"
+  },
+  "03223548": {
+    "status": "valid"
+  },
+  "03931746": {
+    "status": "valid"
+  },
+  "07306136": {
+    "status": "valid"
+  },
+  "06828959": {
+    "status": "valid"
+  },
+  "02819125": {
+    "status": "valid"
+  },
+  "03483672": {
+    "status": "valid"
+  },
+  "04616837": {
+    "status": "valid"
+  },
+  "01420876": {
+    "status": "valid"
+  },
+  "01973158": {
+    "status": "valid"
+  },
+  "03039308": {
+    "status": "valid"
+  },
+  "01358382": {
+    "status": "valid"
+  },
+  "08331955": {
+    "status": "valid"
+  },
+  "04515001": {
+    "status": "valid"
+  },
+  "01418812": {
+    "status": "valid"
+  },
+  "01060530": {
+    "status": "valid"
+  },
+  "03473666": {
+    "status": "valid"
+  },
+  "09781522": {
+    "status": "valid"
+  },
+  "04160571": {
+    "status": "valid"
+  },
+  "00933890": {
+    "status": "valid"
+  },
+  "02334866": {
+    "status": "valid"
+  },
+  "02387763": {
+    "status": "valid"
+  },
+  "02047278": {
+    "status": "valid"
+  },
+  "01873421": {
+    "status": "valid"
+  },
+  "05690732": {
+    "status": "valid"
+  },
+  "02021938": {
+    "status": "valid"
+  },
+  "02377918": {
+    "status": "valid"
+  },
+  "03830041": {
+    "status": "valid"
+  },
+  "03220818": {
+    "status": "valid"
+  },
+  "00434420": {
+    "status": "valid"
+  },
+  "01576461": {
+    "status": "valid"
+  },
+  "02461585": {
+    "status": "valid"
+  },
+  "00172209": {
+    "status": "valid"
+  },
+  "00866931": {
+    "status": "valid"
+  },
+  "03833873": {
+    "status": "valid"
+  },
+  "04374861": {
     "status": "valid"
   }
 }
