@@ -33,7 +33,7 @@ async function fetchContent(url) {
   
   async function postcodeExtraction() {
 
-    const postcodeAreas = ['PL'];
+    const postcodeAreas = ['GL'];
 
     // const postcodeAreas = [
     //   "AB", "AL", "B", "BA", "BB", "BD", "BH", "BL", "BN", "BR", "BS", "BT", 

@@ -84,20 +84,24 @@ const MapComponent = () => {
   }, []);
 
   const fetchCompanies = () => {
+    const API_URL = process.env.NODE_ENV === 'production'
+      ? process.env.REACT_APP_API_URL_PRODUCTION // Deployed backend URL (configure in Vercel)
+      : 'http://localhost:3000'; // Local development backend URL
+  
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
       if (!bounds) {
         console.error("Map bounds not available");
         return;
       }
-
+  
       const northWest = bounds.getNorthWest();
       const southEast = bounds.getSouthEast();
-
+  
       console.log("Exact Bounds:", northWest, southEast);
-
+  
       fetch(
-        `http://localhost:3000/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`
+        `${API_URL}/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`
       )
         .then((response) => {
           if (!response.ok) {
@@ -114,7 +118,7 @@ const MapComponent = () => {
               company.lng <= southEast.lng
             );
           });
-
+  
           console.log("Filtered companies within bounds:", filteredCompanies);
           setCompanies(filteredCompanies);
         })
