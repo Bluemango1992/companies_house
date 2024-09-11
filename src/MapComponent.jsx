@@ -84,9 +84,10 @@ const MapComponent = () => {
   }, []);
 
   const fetchCompanies = () => {
-    const API_URL = process.env.NODE_ENV === 'production'
-      ? process.env.REACT_APP_API_URL_PRODUCTION // Deployed backend URL (configure in Vercel)
-      : 'http://localhost:3000'; // Local development backend URL
+    // Use the environment variable for API URL
+    const API_URL = import.meta.env.MODE === 'production'
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL;
   
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
@@ -100,6 +101,7 @@ const MapComponent = () => {
   
       console.log("Exact Bounds:", northWest, southEast);
   
+      // Use the correct API URL for production or development
       fetch(
         `${API_URL}/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`
       )
@@ -126,7 +128,7 @@ const MapComponent = () => {
     } else {
       console.error("Map reference not available");
     }
-  };
+  };  
 
   return (
     <div>
