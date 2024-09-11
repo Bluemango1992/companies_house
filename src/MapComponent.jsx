@@ -41,12 +41,12 @@ function MarkerClusterGroup({ companies }) {
             Company Number: {company.company_number}
             <br />
             <a
-            href={`https://find-and-update.company-information.service.gov.uk/company/${company.company_number}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-      View Company Info
-    </a>
+              href={`https://find-and-update.company-information.service.gov.uk/company/${company.company_number}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Company Info
+            </a>
           </div>
         );
         marker.bindPopup(popupContent);
@@ -66,7 +66,23 @@ const MapComponent = () => {
   const [companies, setCompanies] = useState([]);
   const center = [51.509894, -2.580489];
 
-  // Function to fetch companies based on current map bounds
+  // State for showing the toast
+  const [showToast, setShowToast] = useState(true); // Initially show toast
+
+  // Function to close the toast
+  const handleCloseToast = () => {
+    setShowToast(false);
+  };
+
+  // Automatically hide the toast after 10 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowToast(false);
+    }, 10000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const fetchCompanies = () => {
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
@@ -90,7 +106,6 @@ const MapComponent = () => {
           return response.json();
         })
         .then((data) => {
-          // Filter companies that are within the map bounds
           const filteredCompanies = data.filter((company) => {
             return (
               company.lat <= northWest.lat &&
@@ -108,22 +123,6 @@ const MapComponent = () => {
       console.error("Map reference not available");
     }
   };
-
-  const [showToast, setShowToast] = useState(true);  // Start with the toast visible
-
-  const handleCloseToast = () => {
-    setShowToast(false);
-  };
-
-  useEffect(() => {
-    // Automatically hide the toast after 5 seconds
-    const timer = setTimeout(() => {
-      setShowToast(false);
-    }, 10000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
 
   return (
     <div>
@@ -155,11 +154,11 @@ const MapComponent = () => {
       >
         <Toast
           message="Welcome! This page helps you filter the best companies in the UK, offering valuable information for lead generation, finding contacts, and potential suppliers. These companies are among the top performers in terms of financial strength, ensuring you access to high-quality business opportunities."
-          show={showToast}
-          onClose={handleCloseToast}
+          show={showToast} // Control toast visibility
+          onClose={handleCloseToast} // Handle toast close
         />
       </div>
-          <BuyMeACoffeeButton />
+      <BuyMeACoffeeButton />
       <div
         style={{
           position: "absolute",

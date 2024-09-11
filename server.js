@@ -1,17 +1,25 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON request bodies
 
-// MongoDB connection
-mongoose.connect('mongodb://127.0.0.1:27017/bluechipuk', {
+// Choose the MongoDB URI based on the environment (development or production)
+const mongoUri = process.env.NODE_ENV === 'production' 
+  ? process.env.MONGODB_URI_ATLAS
+  : process.env.MONGODB_URI_LOCAL;
+
+// MongoDB connection using the chosen URI
+mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
-  console.log('Connected to MongoDB');
+  console.log(`Connected to MongoDB (${process.env.NODE_ENV})`);
 }).catch((err) => {
   console.error('Error connecting to MongoDB:', err);
 });
