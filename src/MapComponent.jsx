@@ -85,9 +85,22 @@ const MapComponent = () => {
 
   const fetchCompanies = () => {
     // Use the environment variable for API URL
-    const API_URL = import.meta.env.MODE === 'production'
-      ? import.meta.env.VITE_API_URL_PRODUCTION
+    const API_URL = import.meta.env.PROD 
+      ? import.meta.env.VITE_API_URL_PRODUCTION 
       : import.meta.env.VITE_API_URL;
+
+fetch(`${API_URL}/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then((data) => {
+    // Process data
+  })
+  .catch((error) => console.error("Error fetching data:", error));
+
   
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
