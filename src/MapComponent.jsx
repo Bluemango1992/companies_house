@@ -84,8 +84,12 @@ const MapComponent = () => {
   }, []);
 
   const fetchCompanies = () => {
-    // Use the environment variable for API URL
-    const API_URL = 'http://localhost:3000';
+    
+    const API_URL = import.meta.env.DEV
+  ? import.meta.env.VITE_API_URL_DEVELOPMENT
+  : import.meta.env.VITE_API_URL_PRODUCTION;
+
+    console.log(API_URL);
   
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
