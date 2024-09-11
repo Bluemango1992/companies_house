@@ -12,6 +12,15 @@ import Toast from "./Toast";
 import BuyMeACoffeeButton from "./DonateButton";
 import "./MapComponent.css";
 
+// Fix Leaflet's icon path issue for production
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: new URL("leaflet/dist/images/marker-icon-2x.png", import.meta.url).href,
+  iconUrl: new URL("leaflet/dist/images/marker-icon.png", import.meta.url).href,
+  shadowUrl: new URL("leaflet/dist/images/marker-shadow.png", import.meta.url).href,
+});
+
 function MarkerClusterGroup({ companies }) {
   const map = useMap();
   const groupRef = useRef(null);
