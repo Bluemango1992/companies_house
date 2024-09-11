@@ -83,18 +83,17 @@ const MapComponent = () => {
   }, []);
 
   const fetchCompanies = () => {
-    setIsLoading(true);
     const API_URL = import.meta.env.DEV
       ? import.meta.env.VITE_API_URL_DEVELOPMENT
       : import.meta.env.VITE_API_URL_PRODUCTION;
     
+    // Log API_URL to check what value is being used
     console.log("Using API_URL:", API_URL);
   
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
       if (!bounds) {
         console.error("Map bounds not available");
-        setIsLoading(false);
         return;
       }
   
@@ -124,15 +123,10 @@ const MapComponent = () => {
   
           console.log("Filtered companies within bounds:", filteredCompanies);
           setCompanies(filteredCompanies);
-          setIsLoading(false);
         })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          setIsLoading(false);
-        });
+        .catch((error) => console.error("Error fetching data:", error));
     } else {
       console.error("Map reference not available");
-      setIsLoading(false);
     }
   };  
 
@@ -151,7 +145,26 @@ const MapComponent = () => {
         />
         <MarkerClusterGroup companies={companies} />
       </MapContainer>
-      {/* ... (other components remain unchanged) */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "5%",
+          right: "42px",
+          zIndex: 1000,
+        }}
+      >
+        <FABButton />
+      </div>
+      <div
+        style={{ position: "absolute", top: "5%", left: "5%", zIndex: 1000 }}
+      >
+        <Toast
+          message="Welcome! This page helps you filter the best companies in the UK, offering valuable information for lead generation, finding contacts, and potential suppliers. These companies are among the top performers in terms of financial strength, ensuring you access to high-quality business opportunities."
+          show={showToast}
+          onClose={handleCloseToast}
+        />
+      </div>
+      <BuyMeACoffeeButton />
       <div
         style={{
           position: "absolute",
