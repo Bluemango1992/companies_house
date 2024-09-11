@@ -1,32 +1,174 @@
 // FABButton.js
 import React, { useState } from 'react';
-import './FABButton.css';
+import styled from 'styled-components';
 import { ChatBubbleIcon } from '@radix-ui/react-icons';
 
-const FeedbackModal = ({ onClose , isOpen }) => {
+const FabButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+  }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const Modal = styled.div`
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+`;
+
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+`;
+
+const ModalTitle = styled.h1`
+  margin: 0;
+  font-size: 28px;
+  color: #333;
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #777;
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #333;
+  }
+`;
+
+const ModalBody = styled.div`
+  margin-bottom: 25px;
+`;
+
+const ModalText = styled.p`
+  font-size: 16px;
+  line-height: 1.5;
+  color: #555;
+  margin-bottom: 20px;
+`;
+
+const Textarea = styled.textarea`
+  width: 100%;
+  height: 120px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: vertical;
+  font-size: 16px;
+  line-height: 1.5;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+`;
+
+const ModalFooter = styled.div`
+  text-align: right;
+`;
+
+const SubmitButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  font-weight: bold;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const FeedbackModal = ({ onClose, isOpen }) => {
+  const [feedback, setFeedback] = useState('');
+
   if (!isOpen) {
     return null;
   }
+
+  const handleFeedbackChange = (e) => {
+    setFeedback(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (feedback.trim()) {
+      console.log('Feedback submitted:', feedback);
+      // Here you would typically send the feedback to your backend
+      // For now, we'll just log it to the console
+      
+      // Clear the feedback and close the modal
+      setFeedback('');
+      onClose();
+    } else {
+      console.log('Feedback is empty. Please provide some feedback before submitting.');
+    }
+  };
+
   return (
-    <div className="modal-overlay active">
-      <div className="modal">
-        <div className="modal-header">
-          <h1>Provide Feedback</h1>
-          <button className="close-button" onClick={onClose}>×</button>
-        </div>
-        <div className="modal-body">
-          <p>We value your input. Please share your thoughts with us.</p>
-          <textarea placeholder="Type your feedback here."></textarea>
-        </div>
-        <div className="modal-footer">
-          <button className="submit-button" onClick={onClose}>Submit Feedback</button>
-        </div>
-      </div>
-    </div>
+    <ModalOverlay>
+      <Modal>
+        <ModalHeader>
+          <ModalTitle>Provide Feedback</ModalTitle>
+          <CloseButton onClick={onClose}>×</CloseButton>
+        </ModalHeader>
+        <ModalBody>
+          <ModalText>We value your input. Please share your thoughts with us.</ModalText>
+          <Textarea 
+            placeholder="Type your feedback here..." 
+            value={feedback}
+            onChange={handleFeedbackChange}
+          />
+        </ModalBody>
+        <ModalFooter>
+          <SubmitButton onClick={handleSubmit}>Submit Feedback</SubmitButton>
+        </ModalFooter>
+      </Modal>
+    </ModalOverlay>
   );
 };
-
-
 
 const FABButton = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -41,11 +183,11 @@ const FABButton = () => {
 
   return (
     <>
-      <button className="fab-button" onClick={handleButtonClick}>
-        <ChatBubbleIcon height={24} width={24} />
-      </button>
+      <FabButton onClick={handleButtonClick}>
+        <ChatBubbleIcon height={28} width={28} />
+      </FabButton>
   
-      {isModalOpen && <FeedbackModal onClose={closeModal} isOpen={isModalOpen} />}
+      <FeedbackModal onClose={closeModal} isOpen={isModalOpen} />
     </>
   );
 };

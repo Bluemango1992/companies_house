@@ -10,6 +10,7 @@ import Button from "./Button";
 import FABButton from "./FABButton";
 import Toast from "./Toast";
 import BuyMeACoffeeButton from "./DonateButton";
+import "./MapComponent.css";
 
 function MarkerClusterGroup({ companies }) {
   const map = useMap();
@@ -83,17 +84,18 @@ const MapComponent = () => {
   }, []);
 
   const fetchCompanies = () => {
+    setIsLoading(true); // Set loading to true when starting the fetch
     const API_URL = import.meta.env.DEV
       ? import.meta.env.VITE_API_URL_DEVELOPMENT
       : import.meta.env.VITE_API_URL_PRODUCTION;
     
-    // Log API_URL to check what value is being used
     console.log("Using API_URL:", API_URL);
   
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
       if (!bounds) {
         console.error("Map bounds not available");
+        setIsLoading(false); // Clear loading state if there's an error
         return;
       }
   
@@ -123,12 +125,17 @@ const MapComponent = () => {
   
           console.log("Filtered companies within bounds:", filteredCompanies);
           setCompanies(filteredCompanies);
+          setIsLoading(false); // Clear loading state when done
         })
-        .catch((error) => console.error("Error fetching data:", error));
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          setIsLoading(false); // Clear loading state if there's an error
+        });
     } else {
       console.error("Map reference not available");
+      setIsLoading(false); // Clear loading state if there's an error
     }
-  };  
+  };
 
   return (
     <div>
