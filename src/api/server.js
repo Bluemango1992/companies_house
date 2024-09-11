@@ -28,6 +28,18 @@ mongoose.connect(mongoUri, {
   console.error('Error connecting to MongoDB:', err);
 });
 
+// Define a Feedback schema
+const feedbackSchema = new mongoose.Schema({
+    feedback: String,
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  });
+  
+  // Create a Feedback model
+  const Feedback = mongoose.model('Feedback', feedbackSchema);  
+
 // Define a Company schema
 const companySchema = new mongoose.Schema({
   name: String,
@@ -97,29 +109,40 @@ app.get('/companies/:company_number', async (req, res) => {
 
 app.post('/feedback', async (req, res) => {
     try {
-        const { feedback } = req.body;
-
-        // Ensure feedback is provided
-        if (!feedback || feedback.trim() === '') {
-            return res.status(400).json({ message: 'Feedback is required' });
-        }
-
-        // Process the feedback (e.g., save to database or send to an email)
-        // You might want to create a Feedback model if you're saving it
-        // Example:
-        // const newFeedback = new Feedback({ text: feedback });
-        // await newFeedback.save();
-
-        // Respond with success
-        return res.status(200).json({ message: 'Feedback submitted successfully' });
-
+      const { feedback } = req.body;
+  
+      // Ensure feedback is provided
+      if (!feedback || feedback.trim() === '') {
+        console.log('Feedback not provided or empty');
+        return res.status(400).json({ message: 'Feedback is required' });
+      }
+  
+      // Log the feedback entry before inserting
+      const feedbackEntry = {
+        feedback: feedback,
+        createdAt: new Date(),  // Ensure createdAt is included for time-series collection
+      };
+  
+      console.log('Inserting feedback:', feedbackEntry);
+  
+      // Ensure MongoDB is connected
+      if (!mongoose.connection.readyState) {
+        console.error('MongoDB not connected');
+        return res.status(500).json({ message: 'Database connection error' });
+      }
+  
+      // Insert feedback into the database
+      const result = await mongoose.connection.collection('feedback').insertOne(feedbackEntry);
+      console.log('Feedback successfully inserted:', result);
+  
+      return res.status(200).json({ message: 'Feedback submitted successfully' });
     } catch (err) {
-        // Log the error and return a server error message
-        console.error('Error submitting feedback:', err);
-        return res.status(500).json({ message: 'Internal Server Error' });
+      console.error('Error submitting feedback:', err);
+      return res.status(500).json({ message: 'Internal Server Error' });
     }
-});
-
+  });
+  
+  
 // GET route to fetch companies (as you had before)
 app.get('/companies', async (req, res) => {
   try {

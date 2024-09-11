@@ -140,7 +140,6 @@ const FeedbackModal = ({ onClose, isOpen }) => {
       });
   
       if (response.ok) {
-        alert('Feedback submitted successfully!');
         setFeedback('');
         onClose();
       } else {
