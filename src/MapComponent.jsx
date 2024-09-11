@@ -1,12 +1,15 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import 'leaflet.markercluster';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
-import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
-import Button from './Button';
-import { renderToStaticMarkup } from 'react-dom/server';
+import React, { useRef, useState, useEffect } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import "leaflet.markercluster";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+import { renderToStaticMarkup } from "react-dom/server";
+import Button from "./Button";
+import FABButton from "./FABButton";
+import Toast from "./Toast";
+import BuyMeACoffeeButton from "./DonateButton";
 
 function MarkerClusterGroup({ companies }) {
   const map = useMap();
@@ -24,19 +27,34 @@ function MarkerClusterGroup({ companies }) {
   useEffect(() => {
     groupRef.current.clearLayers();
     companies.forEach((company) => {
-      // Use the separate Latitude and Longitude fields
-      const marker = L.marker([company.Latitude, company.Longitude]);
+      if (company.lat !== undefined && company.lng !== undefined) {
+        const marker = L.marker([company.lat, company.lng]);
 
-      const popupContent = renderToStaticMarkup(
-        <div>
-          <b>{company.CompanyName}</b><br />
-          {company.Address}<br />
-          Score: {company.TotalScore}
-        </div>
-      );
-      marker.bindPopup(popupContent);
+        const popupContent = renderToStaticMarkup(
+          <div>
+            <b>{company.name}</b>
+            <br />
+            {company.address.line_1}, {company.address.line_2}
+            <br />
+            {company.address.locality}, {company.address.postal_code}
+            <br />
+            Company Number: {company.company_number}
+            <br />
+            <a
+            href={`https://find-and-update.company-information.service.gov.uk/company/${company.company_number}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+      View Company Info
+    </a>
+          </div>
+        );
+        marker.bindPopup(popupContent);
 
-      groupRef.current.addLayer(marker);
+        groupRef.current.addLayer(marker);
+      } else {
+        console.warn("Invalid LatLng for company:", company);
+      }
     });
   }, [companies]);
 
@@ -44,26 +62,26 @@ function MarkerClusterGroup({ companies }) {
 }
 
 const MapComponent = () => {
-
   const mapRef = useRef(null);
   const [companies, setCompanies] = useState([]);
   const center = [51.509894, -2.580489];
 
+  // Function to fetch companies based on current map bounds
   const fetchCompanies = () => {
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
       if (!bounds) {
-        console.error('Map bounds not available');
+        console.error("Map bounds not available");
         return;
       }
-      
+
       const northWest = bounds.getNorthWest();
       const southEast = bounds.getSouthEast();
-  
-      console.log('Exact Bounds:', northWest, southEast);
-  
+
+      console.log("Exact Bounds:", northWest, southEast);
+
       fetch(
-        `http://localhost:5000/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`
+        `http://localhost:3000/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`
       )
         .then((response) => {
           if (!response.ok) {
@@ -72,21 +90,47 @@ const MapComponent = () => {
           return response.json();
         })
         .then((data) => {
-          console.log('Fetched companies:', data);
-          setCompanies(data);
+          // Filter companies that are within the map bounds
+          const filteredCompanies = data.filter((company) => {
+            return (
+              company.lat <= northWest.lat &&
+              company.lat >= southEast.lat &&
+              company.lng >= northWest.lng &&
+              company.lng <= southEast.lng
+            );
+          });
+
+          console.log("Filtered companies within bounds:", filteredCompanies);
+          setCompanies(filteredCompanies);
         })
-        .catch((error) => console.error('Error fetching data:', error));
+        .catch((error) => console.error("Error fetching data:", error));
     } else {
-      console.error('Map reference not available');
+      console.error("Map reference not available");
     }
   };
+
+  const [showToast, setShowToast] = useState(true);  // Start with the toast visible
+
+  const handleCloseToast = () => {
+    setShowToast(false);
+  };
+
+  useEffect(() => {
+    // Automatically hide the toast after 5 seconds
+    const timer = setTimeout(() => {
+      setShowToast(false);
+    }, 10000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
 
   return (
     <div>
       <MapContainer
         center={center}
         zoom={13}
-        style={{ height: '100vh', width: '100%' }}
+        style={{ height: "100vh", width: "100%" }}
         ref={mapRef}
         zoomControl={false}
       >
@@ -96,8 +140,36 @@ const MapComponent = () => {
         />
         <MarkerClusterGroup companies={companies} />
       </MapContainer>
-      <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 1000 }}>
-        <Button onClick={fetchCompanies}>Search Area</Button>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "5%",
+          right: "42px",
+          zIndex: 1000,
+        }}
+      >
+        <FABButton />
+      </div>
+      <div
+        style={{ position: "absolute", top: "5%", left: "5%", zIndex: 1000 }}
+      >
+        <Toast
+          message="Welcome! This page helps you filter the best companies in the UK, offering valuable information for lead generation, finding contacts, and potential suppliers. These companies are among the top performers in terms of financial strength, ensuring you access to high-quality business opportunities."
+          show={showToast}
+          onClose={handleCloseToast}
+        />
+      </div>
+          <BuyMeACoffeeButton />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "5%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 1000,
+        }}
+      >
+        <Button onClick={fetchCompanies} />
       </div>
     </div>
   );

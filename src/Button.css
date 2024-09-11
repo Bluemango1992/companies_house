@@ -1,39 +1,34 @@
-/* Button Styling */
+/* Button.css */
+.button-container {
+  position: relative;
+  display: inline-block;
+}
+
+.button-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #FDE68A, #F59E0B); /* Replacing from-yellow-300 to-yellow-500 */
+  border-radius: 9999px;
+  filter: blur(4px); /* Equivalent to blur-sm */
+}
+
 .button {
-    display: inline-block;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #007BFF;
-    border: none;
-    border-radius: 4px;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  /* Hover State */
-  .button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Focus State */
-  .button:focus {
-    outline: 2px solid #0056b3;
-    outline-offset: 2px;
-  }
-  
-  /* Active State */
-  .button:active {
-    background-color: #004085;
-    transform: scale(0.98);
-  }
-  
-  /* Disabled State */
-  .button:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-  }
-  
+  position: relative;
+  border-radius: 9999px; /* Equivalent to rounded-full */
+  background: linear-gradient(to right, #FDE68A, #F59E0B); /* Replacing from-yellow-300 to-yellow-500 */
+  color: #4B5563; /* Replacing text-gray-700 */
+  font-size: 1.125rem; /* Equivalent to text-lg */
+  font-weight: 600; /* Equivalent to font-semibold */
+  padding: 0.75rem 2rem; /* Equivalent to px-8 py-3 */
+  transition: all 0.3s; /* Equivalent to transition-all duration-300 */
+}
+
+.button:hover {
+  color: #374151; /* Replacing hover:text-gray-800 */
+  background: linear-gradient(to right, #FCD34D, #D97706); /* Replacing hover:from-yellow-400 hover:to-yellow-600 */
+}
+
+.button span {
+  position: relative;
+  z-index: 10;
+}
