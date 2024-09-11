@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ path: '../../.env' })
 
 const app = express();
 app.use(cors());
@@ -13,6 +13,9 @@ app.use(express.json()); // Middleware to parse JSON request bodies
 const mongoUri = process.env.NODE_ENV === 'production' 
   ? process.env.MONGODB_URI_ATLAS
   : process.env.MONGODB_URI_LOCAL;
+
+console.log('NODE_ENV:', process.env.NODE_ENV); // Check if NODE_ENV is correctly set
+console.log('MONGODB_URI_ATLAS:', process.env.MONGODB_URI_ATLAS); // Check if the Atlas URI is loaded
 
 // MongoDB connection using the chosen URI
 mongoose.connect(mongoUri, {
