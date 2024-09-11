@@ -1,8 +1,12 @@
 // src/api/getCompanies.js
 import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '../../.env' })
 
 export default async function handler(req, res) {
   const uri = process.env.MONGODB_URI;
+  console.log('uri:', uri);
   
   // Initialize the MongoClient
   const client = new MongoClient(uri);
@@ -27,3 +31,5 @@ export default async function handler(req, res) {
     await client.close();
   }
 }
+
+handler();
