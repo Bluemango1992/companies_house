@@ -84,12 +84,12 @@ const MapComponent = () => {
   }, []);
 
   const fetchCompanies = () => {
-    
     const API_URL = import.meta.env.DEV
-  ? import.meta.env.VITE_API_URL_DEVELOPMENT
-  : import.meta.env.VITE_API_URL_PRODUCTION;
-
-    console.log(API_URL);
+      ? import.meta.env.VITE_API_URL_DEVELOPMENT
+      : import.meta.env.VITE_API_URL_PRODUCTION;
+    
+    // Log API_URL to check what value is being used
+    console.log("Using API_URL:", API_URL);
   
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
@@ -103,7 +103,6 @@ const MapComponent = () => {
   
       console.log("Exact Bounds:", northWest, southEast);
   
-      // Use the correct API URL for production or development
       fetch(
         `${API_URL}/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`
       )
