@@ -114,15 +114,13 @@ const MapComponent = () => {
     setIsLoading(true); // Set loading to true when starting the fetch
     setFetchError(null); // Reset any previous errors
 
-    console.log(import.meta.env);
-    
-    const API_URL = import.meta.env.NODE_ENV === 'production'
+    const API_URL = import.meta.env.MODE === 'production'
   ? import.meta.env.VITE_API_URL_PRODUCTION
   : import.meta.env.VITE_API_URL_DEVELOPMENT;
 
+  console.log('API_URL:', API_URL); // Add this to verify if API_URL is being correctly set
+
   
-
-
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
       if (!bounds) {
