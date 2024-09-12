@@ -94,7 +94,7 @@ const MapComponent = () => {
 
   const fetchCompanies = () => {
     setIsLoading(true); // Set loading to true when starting the fetch
-    const API_URL = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:3000';    
+    const API_URL = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:3000'; 
   
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
@@ -113,9 +113,16 @@ const MapComponent = () => {
         `${API_URL}/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`
       )
         .then((response) => {
+          // Log the constructed URL
+          console.log(
+            `${API_URL}/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`
+          );
+      
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
+          console.log("Response status:", response.status);
+      
           return response.json();
         })
         .then((data) => {
