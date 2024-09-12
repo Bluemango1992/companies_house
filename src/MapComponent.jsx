@@ -114,6 +114,7 @@ const MapComponent = () => {
     setIsLoading(true); // Set loading to true when starting the fetch
     setFetchError(null); // Reset any previous errors
 
+
     const API_URL = import.meta.env.MODE === 'production'
   ? import.meta.env.VITE_API_URL_PRODUCTION
   : import.meta.env.VITE_API_URL_DEVELOPMENT;
