@@ -1,6 +1,5 @@
-// api/getCompanyByNumber.js
-import connectToDatabase from './db';
-import Company from './models/Company';
+import connectToDatabase from './db.js';
+import Company from './models/Company.js';
 
 export default async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', process.env.NODE_ENV === 'production' 
@@ -21,7 +20,7 @@ export default async (req, res) => {
   try {
     await connectToDatabase();
 
-    const { company_number } = req.query; // Get company_number from URL parameter
+    const { company_number } = req.params; // Get company_number from URL parameters
 
     if (!company_number) {
       return res.status(400).json({ message: 'Company number is required' });

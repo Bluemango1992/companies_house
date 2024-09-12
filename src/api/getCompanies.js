@@ -1,6 +1,6 @@
 // api/getCompanies.js
-import connectToDatabase from './db';
-import Company from './models/Company';
+import connectToDatabase from './db.js';
+import Company from './models/Company.js';
 
 export default async (req, res) => {
   try {

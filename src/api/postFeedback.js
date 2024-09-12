@@ -1,6 +1,6 @@
 // api/postFeedback.js
-import connectToDatabase from './db';
-import Feedback from './models/Feedback';
+import connectToDatabase from './db.js';
+import Feedback from './models/Feedback.js';
 
 export default async (req, res) => {
   try {

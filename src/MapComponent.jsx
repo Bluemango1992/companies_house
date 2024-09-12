@@ -75,6 +75,7 @@ const MapComponent = () => {
   const mapRef = useRef(null);
   const [companies, setCompanies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [fetchError, setFetchError] = useState(null); // Track fetch errors
   const center = [51.509894, -2.580489];
   const [showToast, setShowToast] = useState(true);
 
@@ -92,10 +93,32 @@ const MapComponent = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Fetch companies with a timeout
+  const fetchWithTimeout = (url, options = {}, timeout = 10000) => {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('Request timed out')), timeout);
+
+      fetch(url, options)
+        .then(response => {
+          clearTimeout(timer);
+          resolve(response);
+        })
+        .catch(err => {
+          clearTimeout(timer);
+          reject(err);
+        });
+    });
+  };
+
   const fetchCompanies = () => {
     setIsLoading(true); // Set loading to true when starting the fetch
-    const API_URL = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:3000'; 
-  
+    setFetchError(null); // Reset any previous errors
+
+    const API_URL = import.meta.env.NODE_ENV === 'production'
+  ? import.meta.env.VITE_API_URL_PRODUCTION
+  : import.meta.env.VITE_API_URL_DEVELOPMENT;
+
+
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
       if (!bounds) {
@@ -103,51 +126,43 @@ const MapComponent = () => {
         setIsLoading(false); // Clear loading state if there's an error
         return;
       }
-  
+
       const northWest = bounds.getNorthWest();
       const southEast = bounds.getSouthEast();
-  
-      console.log("Exact Bounds:", northWest, southEast);
-  
-      fetch(
-        `${API_URL}/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`
-      )
-        .then((response) => {
-          // Log the constructed URL
-          console.log(
-            `${API_URL}/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`
-          );
       
+      const apiUrl = `${API_URL}/api/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`;
+
+      console.log("Fetching data from:", apiUrl);
+
+      // Use fetch with timeout
+      fetchWithTimeout(apiUrl)
+        .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-          console.log("Response status:", response.status);
-      
           return response.json();
         })
-        .then((data) => {
-          const filteredCompanies = data.filter((company) => {
-            return (
-              company.lat <= northWest.lat &&
-              company.lat >= southEast.lat &&
-              company.lng >= northWest.lng &&
-              company.lng <= southEast.lng
-            );
-          });
-  
+        .then(data => {
+          const filteredCompanies = data.filter(company => (
+            company.lat <= northWest.lat &&
+            company.lat >= southEast.lat &&
+            company.lng >= northWest.lng &&
+            company.lng <= southEast.lng
+          ));
+
           console.log("Filtered companies within bounds:", filteredCompanies);
           setCompanies(filteredCompanies);
           setIsLoading(false); // Clear loading state when done
         })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          console.error("Response status:", error.response?.status);
-          console.error("Response text:", error.response?.text());
-          setIsLoading(false);
+        .catch(error => {
+          console.error("Error fetching data or request timed out:", error);
+          setIsLoading(false); // Clear loading state if there's an error
+          setFetchError("Failed to load companies: " + error.message);
         });
     } else {
       console.error("Map reference not available");
       setIsLoading(false); // Clear loading state if there's an error
+      setFetchError("Map reference not available.");
     }
   };
 
@@ -197,6 +212,8 @@ const MapComponent = () => {
       >
         <Button onClick={fetchCompanies} disabled={isLoading} />
       </div>
+
+      {/* Show spinner or error message based on the state */}
       {isLoading && (
         <div
           style={{
@@ -213,6 +230,25 @@ const MapComponent = () => {
         >
           <div className="spinner"></div>
           <p style={{ marginTop: "10px" }}>Loading...</p>
+        </div>
+      )}
+
+      {/* Show error message if there's an error */}
+      {fetchError && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 2000,
+            backgroundColor: "rgba(255, 0, 0, 0.8)",
+            padding: "20px",
+            borderRadius: "10px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
+          }}
+        >
+          <p style={{ color: "white" }}>{fetchError}</p>
         </div>
       )}
     </div>
