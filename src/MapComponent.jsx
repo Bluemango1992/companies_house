@@ -94,9 +94,7 @@ const MapComponent = () => {
 
   const fetchCompanies = () => {
     setIsLoading(true); // Set loading to true when starting the fetch
-    const API_URL = import.meta.env.DEV
-      ? import.meta.env.VITE_API_URL_DEVELOPMENT
-      : import.meta.env.VITE_API_URL_PRODUCTION;
+    const API_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
     
     console.log("Using API_URL:", API_URL);
   

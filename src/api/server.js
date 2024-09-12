@@ -5,18 +5,18 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: '../../.env' })
 
-
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production' 
+      ? 'https://companies-house-three.vercel.app/' 
+      : 'http://localhost:5173'
+  }));
 app.use(express.json()); // Middleware to parse JSON request bodies
 
 // Choose the MongoDB URI based on the environment (development or production)
 const mongoUri = process.env.NODE_ENV === 'production' 
   ? process.env.MONGODB_URI_ATLAS
   : process.env.MONGODB_URI_LOCAL;
-
-console.log('NODE_ENV:', process.env.NODE_ENV); // Check if NODE_ENV is correctly set
-console.log('MONGODB_URI_ATLAS:', process.env.MONGODB_URI_ATLAS); // Check if the Atlas URI is loaded
 
 // MongoDB connection using the chosen URI
 mongoose.connect(mongoUri, {
@@ -38,7 +38,7 @@ const feedbackSchema = new mongoose.Schema({
   });
   
   // Create a Feedback model
-  const Feedback = mongoose.model('Feedback', feedbackSchema);  
+const Feedback = mongoose.model('Feedback', feedbackSchema);  
 
 // Define a Company schema
 const companySchema = new mongoose.Schema({
