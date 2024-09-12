@@ -6,11 +6,13 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '../../.env' })
 
 const app = express();
+
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
-      ? 'https://companies-house-three.vercel.app/' 
+      ? 'https://companies-house-three.vercel.app' 
       : 'http://localhost:5173'
   }));
+
 app.use(express.json()); // Middleware to parse JSON request bodies
 
 // Choose the MongoDB URI based on the environment (development or production)
@@ -58,6 +60,8 @@ const companySchema = new mongoose.Schema({
 
 // Create a Company model
 const Company = mongoose.model('Company', companySchema);
+
+app.use('/api', router);  // Assuming you have your routes in a separate router
 
 // POST route to add new companies
 app.post('/companies', async (req, res) => {

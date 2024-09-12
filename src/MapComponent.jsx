@@ -94,9 +94,7 @@ const MapComponent = () => {
 
   const fetchCompanies = () => {
     setIsLoading(true); // Set loading to true when starting the fetch
-    const API_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
-    
-    console.log("Using API_URL:", API_URL);
+    const API_URL = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:3000';    
   
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
@@ -136,7 +134,9 @@ const MapComponent = () => {
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
-          setIsLoading(false); // Clear loading state if there's an error
+          console.error("Response status:", error.response?.status);
+          console.error("Response text:", error.response?.text());
+          setIsLoading(false);
         });
     } else {
       console.error("Map reference not available");
