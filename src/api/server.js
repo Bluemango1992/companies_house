@@ -7,11 +7,7 @@ dotenv.config({ path: '../../.env' })
 
 const app = express();
 
-app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-      ? 'https://companies-house-three.vercel.app' 
-      : 'http://localhost:5173'
-  }));
+app.use(cors());
 
 app.use(express.json()); // Middleware to parse JSON request bodies
 
