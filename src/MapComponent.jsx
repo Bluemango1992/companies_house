@@ -133,7 +133,7 @@ const MapComponent = () => {
       const northWest = bounds.getNorthWest();
       const southEast = bounds.getSouthEast();
       
-      const apiUrl = `${API_URL}/api/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`;
+      const apiUrl = `${API_URL}api/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`;
 
       console.log("Fetching data from:", apiUrl);
 
