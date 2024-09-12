@@ -1,35 +1,32 @@
-// src/api/getCompanies.js
-import { MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
+// api/getCompanies.js
+import connectToDatabase from './db';
+import Company from './models/Company'; // Assuming you move the models too
 
-dotenv.config({ path: '../../.env' })
-
-export default async function handler(req, res) {
-  const uri = process.env.MONGODB_URI;
-  console.log('uri:', uri);
-  
-  // Initialize the MongoClient
-  const client = new MongoClient(uri);
-
+export default async (req, res) => {
   try {
-    // Connect to the MongoDB cluster
-    await client.connect();
+    await connectToDatabase(); // Connect to the database
 
-    // Access the database and collection
-    const database = client.db('bluechipuk');
-    const companies = database.collection('companies');
+    const { northWestLat, northWestLng, southEastLat, southEastLng } = req.query;
 
-    // Query for the first 10 companies
-    const result = await companies.find({}).limit(10).toArray();
+    const nwLat = parseFloat(northWestLat);
+    const nwLng = parseFloat(northWestLng);
+    const seLat = parseFloat(southEastLat);
+    const seLng = parseFloat(southEastLng);
 
-    // Return the result as a response
-    res.status(200).json(result);
-    console.log('Companies fetched successfully');
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch companies' });
-  } finally {
-    await client.close();
+    if (isNaN(nwLat) || isNaN(nwLng) || isNaN(seLat) || isNaN(seLng)) {
+      return res.status(400).json({ message: 'Invalid coordinates provided' });
+    }
+
+    const query = {
+      lat: { $gte: seLat, $lte: nwLat },
+      lng: { $gte: nwLng, $lte: seLng }
+    };
+
+    const companies = await Company.find(query);
+
+    res.status(200).json(companies);
+  } catch (error) {
+    console.error('Error in getCompanies route:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
-}
-
-handler();
+};

@@ -1,5 +1,3 @@
-// src/models/Company.js
-
 import mongoose from 'mongoose';
 
 const companySchema = new mongoose.Schema({
@@ -11,10 +9,10 @@ const companySchema = new mongoose.Schema({
     line_2: String,
     locality: String,
     postal_code: String,
-    region: String,
+    region: String
   },
   lat: Number,
-  lng: Number,
+  lng: Number
 });
 
 const Company = mongoose.models.Company || mongoose.model('Company', companySchema);
