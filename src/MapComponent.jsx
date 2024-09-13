@@ -16,26 +16,32 @@ import "./MapComponent.css";
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: new URL("leaflet/dist/images/marker-icon-2x.png", import.meta.url).href,
+  iconRetinaUrl: new URL(
+    "leaflet/dist/images/marker-icon-2x.png",
+    import.meta.url
+  ).href,
   iconUrl: new URL("leaflet/dist/images/marker-icon.png", import.meta.url).href,
-  shadowUrl: new URL("leaflet/dist/images/marker-shadow.png", import.meta.url).href,
+  shadowUrl: new URL("leaflet/dist/images/marker-shadow.png", import.meta.url)
+    .href,
 });
 
 function MarkerClusterGroup({ companies }) {
   const map = useMap();
-  const groupRef = useRef(null);
+  const groupRef = useRef(L.markerClusterGroup());
 
   useEffect(() => {
-    groupRef.current = L.markerClusterGroup();
-    map.addLayer(groupRef.current);
+    const group = groupRef.current;
+    map.addLayer(group);
 
     return () => {
-      map.removeLayer(groupRef.current);
+      map.removeLayer(group);
     };
   }, [map]);
 
   useEffect(() => {
-    groupRef.current.clearLayers();
+    const group = groupRef.current;
+    group.clearLayers();
+
     companies.forEach((company) => {
       if (company.lat !== undefined && company.lng !== undefined) {
         const marker = L.marker([company.lat, company.lng]);
@@ -61,7 +67,7 @@ function MarkerClusterGroup({ companies }) {
         );
         marker.bindPopup(popupContent);
 
-        groupRef.current.addLayer(marker);
+        group.addLayer(marker);
       } else {
         console.warn("Invalid LatLng for company:", company);
       }
@@ -75,16 +81,16 @@ const MapComponent = () => {
   const mapRef = useRef(null);
   const [companies, setCompanies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [fetchError, setFetchError] = useState(null); // Track fetch errors
+  const [fetchError, setFetchError] = useState(null);
   const center = [51.509894, -2.580489];
   const [showToast, setShowToast] = useState(true);
 
-  // Function to close the toast
-  const handleCloseToast = () => {
-    setShowToast(false);
-  };
+  const API_URL =
+    import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_DEVELOPMENT;
 
-  // Automatically hide the toast after 10 seconds
+  // Close the toast after 10 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowToast(false);
@@ -93,79 +99,62 @@ const MapComponent = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Fetch companies with a timeout
-  const fetchWithTimeout = (url, options = {}, timeout = 10000) => {
-    return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error('Request timed out')), timeout);
+  // Fetch companies with a timeout using AbortController
+  const fetchCompanies = async () => {
+    setIsLoading(true);
+    setFetchError(null);
 
-      fetch(url, options)
-        .then(response => {
-          clearTimeout(timer);
-          resolve(response);
-        })
-        .catch(err => {
-          clearTimeout(timer);
-          reject(err);
-        });
-    });
-  };
-
-  const fetchCompanies = () => {
-    setIsLoading(true); // Set loading to true when starting the fetch
-    setFetchError(null); // Reset any previous errors
-
-
-    const API_URL = import.meta.env.MODE === 'production'
-  ? import.meta.env.VITE_API_URL_PRODUCTION
-  : import.meta.env.VITE_API_URL_DEVELOPMENT;
-
-  console.log('API_URL:', API_URL); // Add this to verify if API_URL is being correctly set
-
-  
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
       if (!bounds) {
         console.error("Map bounds not available");
-        setIsLoading(false); // Clear loading state if there's an error
+        setIsLoading(false);
         return;
       }
 
       const northWest = bounds.getNorthWest();
       const southEast = bounds.getSouthEast();
-      
+
       const apiUrl = `${API_URL}api/companies?northWestLat=${northWest.lat}&northWestLng=${northWest.lng}&southEastLat=${southEast.lat}&southEastLng=${southEast.lng}`;
 
-      console.log("Fetching data from:", apiUrl);
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
 
-      // Use fetch with timeout
-      fetchWithTimeout(apiUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          const filteredCompanies = data.filter(company => (
+        const response = await fetch(apiUrl, { signal: controller.signal });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const filteredCompanies = data.filter(
+          (company) =>
             company.lat <= northWest.lat &&
             company.lat >= southEast.lat &&
             company.lng >= northWest.lng &&
             company.lng <= southEast.lng
-          ));
+        );
 
-          console.log("Filtered companies within bounds:", filteredCompanies);
-          setCompanies(filteredCompanies);
-          setIsLoading(false); // Clear loading state when done
-        })
-        .catch(error => {
-          console.error("Error fetching data or request timed out:", error);
-          setIsLoading(false); // Clear loading state if there's an error
+        setCompanies(filteredCompanies);
+      } catch (error) {
+        if (error.name === "AbortError") {
+          console.error("Request timed out");
+          setFetchError("Request timed out");
+        } else {
+          console.error("Error fetching data:", error);
           setFetchError("Failed to load companies: " + error.message);
-        });
+        }
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       console.error("Map reference not available");
-      setIsLoading(false); // Clear loading state if there's an error
       setFetchError("Map reference not available.");
+      setIsLoading(false);
     }
   };
 
@@ -184,74 +173,37 @@ const MapComponent = () => {
         />
         <MarkerClusterGroup companies={companies} />
       </MapContainer>
-      <div
-        style={{
-          position: "absolute",
-          bottom: "5%",
-          right: "42px",
-          zIndex: 1000,
-        }}
-      >
+      <div className="fab-button-container">
         <FABButton />
       </div>
-      <div
-        style={{ position: "absolute", top: "5%", left: "5%", zIndex: 1000 }}
-      >
+      <div className="toast-container">
         <Toast
           message="Welcome! This page helps you filter the best companies in the UK, offering valuable information for lead generation, finding contacts, and potential suppliers. These companies are among the top performers in terms of financial strength, ensuring you access to high-quality business opportunities."
           show={showToast}
-          onClose={handleCloseToast}
+          onClose={() => setShowToast(false)}
         />
       </div>
       <BuyMeACoffeeButton />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "5%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 1000,
-        }}
-      >
+      <div className="fetch-button-container">
         <Button onClick={fetchCompanies} disabled={isLoading} />
       </div>
 
-      {/* Show spinner or error message based on the state */}
+      {/* Loading Spinner */}
       {isLoading && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 2000,
-            backgroundColor: "rgba(255, 255, 255, 0.8)",
-            padding: "20px",
-            borderRadius: "10px",
-            boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-          }}
-        >
-          <div className="spinner"></div>
-          <p style={{ marginTop: "10px" }}>Loading...</p>
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="spinner"></div>
+            <p>Loading...</p>
+          </div>
         </div>
       )}
 
-      {/* Show error message if there's an error */}
+      {/* Error Message */}
       {fetchError && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 2000,
-            backgroundColor: "rgba(255, 0, 0, 0.8)",
-            padding: "20px",
-            borderRadius: "10px",
-            boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-          }}
-        >
-          <p style={{ color: "white" }}>{fetchError}</p>
+        <div className="error-overlay">
+          <div className="error-content">
+            <p>{fetchError}</p>
+          </div>
         </div>
       )}
     </div>

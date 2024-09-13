@@ -133,7 +133,7 @@ const FeedbackModal = ({ onClose, isOpen }) => {
     }
   
     try {
-      const response = await fetch('http://localhost:3000/feedback', {  // <-- Replace with the correct backend URL
+      const response = await fetch('http://localhost:3000/api/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ feedback }),
@@ -143,15 +143,22 @@ const FeedbackModal = ({ onClose, isOpen }) => {
         setFeedback('');
         onClose();
       } else {
-        const responseText = await response.text();
-        const message = responseText ? JSON.parse(responseText).message : 'An error occurred';
-        setError(message);
+        const contentType = response.headers.get('content-type');
+        let errorMessage = 'An error occurred';
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          errorMessage = data.message || errorMessage;
+        } else {
+          errorMessage = await response.text();
+        }
+        setError(errorMessage);
       }
     } catch (error) {
       console.error('Error submitting feedback:', error);
       setError('Something went wrong. Please try again later.');
     }
   };
+  
    
 
   if (!isOpen) {

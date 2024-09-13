@@ -3,6 +3,20 @@ import fetch from 'node-fetch';
 // OpenCage Geocoding API key
 const API_KEY = 'cd7e05ccf51b4c9b9d1b176bc944497e'; // Replace with your actual API key
 
+// Implement retry logic with exponential backoff
+async function getLatLongWithRetry(address, retries = 3, backoff = 1000) {
+    try {
+      return await getLatLong(address);
+    } catch (error) {
+      if (retries > 0) {
+        await delay(backoff);
+        return getLatLongWithRetry(address, retries - 1, backoff * 2);
+      } else {
+        throw error;
+      }
+    }
+  }
+
 // Function to geocode an address and return latitude and longitude
 async function getLatLong(address) {
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(address)}&key=${API_KEY}`;
