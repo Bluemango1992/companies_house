@@ -1,4 +1,3 @@
-// FABButton.js
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ChatBubbleIcon } from '@radix-ui/react-icons';
@@ -24,6 +23,14 @@ const FabButton = styled.button`
     background-color: #0056b3;
     transform: scale(1.1);
   }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    width: 50px;
+    height: 50px;
+    bottom: 15px;
+    right: 15px;
+  }
 `;
 
 const ModalOverlay = styled.div`
@@ -46,6 +53,12 @@ const Modal = styled.div`
   width: 90%;
   max-width: 500px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    width: 95%;
+    padding: 20px;
+  }
 `;
 
 const ModalHeader = styled.div`
@@ -59,6 +72,11 @@ const ModalTitle = styled.h1`
   margin: 0;
   font-size: 28px;
   color: #333;
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
 `;
 
 const CloseButton = styled.button`
@@ -72,6 +90,11 @@ const CloseButton = styled.button`
   &:hover {
     color: #333;
   }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
 `;
 
 const ModalBody = styled.div`
@@ -83,6 +106,11 @@ const ModalText = styled.p`
   line-height: 1.5;
   color: #555;
   margin-bottom: 20px;
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 const Textarea = styled.textarea`
@@ -99,6 +127,11 @@ const Textarea = styled.textarea`
   &:focus {
     outline: none;
     border-color: #007bff;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    font-size: 14px;
   }
 `;
 
@@ -119,6 +152,12 @@ const SubmitButton = styled.button`
 
   &:hover {
     background-color: #0056b3;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    font-size: 14px;
+    padding: 10px 20px;
   }
 `;
 
@@ -159,8 +198,6 @@ const FeedbackModal = ({ onClose, isOpen }) => {
     }
   };
   
-   
-
   if (!isOpen) {
     return null;
   }
