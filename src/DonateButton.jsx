@@ -35,7 +35,7 @@ const Button = styled.a`
     text-decoration: none;
     box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5);
     opacity: 0.85;
-    color: #CCCCCC;
+    color: #818589;
   }
 `;
 
