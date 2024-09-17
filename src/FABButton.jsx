@@ -70,6 +70,7 @@ const ModalHeader = styled.div`
 
 const ModalTitle = styled.h1`
   margin: 0;
+  font-weight: bold;
   font-size: 28px;
   color: #333;
 
