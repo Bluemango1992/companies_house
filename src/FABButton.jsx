@@ -165,19 +165,24 @@ const FeedbackModal = ({ onClose, isOpen }) => {
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState(null);
 
+  // Determine the correct base URL for the current environment
+  const apiUrl = import.meta.env.PROD
+    ? import.meta.env.VITE_API_URL_PRODUCTION
+    : import.meta.env.VITE_API_URL_DEVELOPMENT;
+
   const handleSubmit = async () => {
     if (!feedback.trim()) {
       setError('Feedback cannot be empty');
       return;
     }
-  
+
     try {
-      const response = await fetch('http://localhost:3000/api/feedback', {
+      const response = await fetch(`${apiUrl}api/feedback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ feedback }),
       });
-  
+
       if (response.ok) {
         setFeedback('');
         onClose();
@@ -197,7 +202,7 @@ const FeedbackModal = ({ onClose, isOpen }) => {
       setError('Something went wrong. Please try again later.');
     }
   };
-  
+
   if (!isOpen) {
     return null;
   }
